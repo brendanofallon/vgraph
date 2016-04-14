@@ -195,14 +195,22 @@ def superlocus_equal(ref, start, stop, super1, super2, debug=False):
         paths1 = generate_paths(graph1, debug)
         paths2 = generate_paths(graph2, debug)
 
-        paths1, paths2 = intersect_paths(paths1, paths2)
+        intersection1, intersection2 = intersect_paths(paths1, paths2)
 
-        genos1 = set(generate_genotypes(paths1, constraints1, debug))
-        genos2 = set(generate_genotypes(paths2, constraints2, debug))
+        genos1 = set(generate_genotypes(intersection1, constraints1, debug))
+        genos2 = set(generate_genotypes(intersection2, constraints2, debug))
 
         # Test whether genotype sets intersect
         if genos1.isdisjoint(genos2):
-            status = False, 'H'
+
+            # Test for nonempty intersection in absence of zygosity contraints
+            zyg_genos1 = set(generate_genotypes(intersection1, {}, debug))
+            zyg_genos2 = set(generate_genotypes(intersection2, {}, debug))
+            if zyg_genos1.isdisjoint(zyg_genos2):
+                status = False, 'H'
+            else:
+                status = False, 'Z'
+
         else:
             status = True, 'H'
     except ValueError:

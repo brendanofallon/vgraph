@@ -258,8 +258,8 @@ def intersect_paths(paths1, paths2):
     index1 = set(seq for seq, alts in paths1)
     index  = set(seq for seq, alts in paths2 if seq in index1)
 
-    paths1 = (p for p in paths1 if p[0] in index)
-    paths2 = (p for p in paths2 if p[0] in index)
+    paths1 = [p for p in paths1 if p[0] in index]
+    paths2 = [p for p in paths2 if p[0] in index]
 
     return paths1, paths2
 
